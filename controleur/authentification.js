@@ -18,35 +18,38 @@ exports.creationCompte = (req, res, next) => {
             email: crypted,
             motdepasse: hash
         })    
-        .then(() => res.status(201).json({ message : 'utilisateur crée !' }))
+        .then(() => res.status(201).json({ message : 'Félicitation vous êtes inscrit !' }))
         .catch(error => res.status(400).json({ error }));
     })
     .catch(error => res.status(500).json({ error }));
 }
 
 exports.authentification = (req, res, next) => {
-    utilisateur.findOne({ email: req.body.email })
+    var cipher = crypto.createCipher('aes256', 'cleCryptage');
+    var crypted = cipher.update(req.body.email,'utf8','hex');
+    crypted += cipher.final('hex');
+    utilisateur.findOne({ where: {email: crypted} })
     .then(user => {
         if(!user) {
-            return res.status(401).json({ erreur: 'Utilisateur non trouvé' })
+            return res.status(401).json({ message: 'Utilisateur non trouvé' })
         }
-        bcrypt.compare(req.body.password, utilisateur.motdepasse)
+        bcrypt.compare(req.body.password, user.motdepasse)
         .then(valide => {
             if(!valide) {
-                return res.status(401).json({ erreur: 'mot de passe incorrect' })
+                return res.status(401).json({ message: 'mot de passe incorrect' })
             }
             else {
-                res.status(200).json({
-                    userid: utilisateur.id,
+                return res.status(200).json({
+                    userid: user.id,
                     token: jwt.sign(
-                        { userid: utilisateur.id },
+                        { userId: user.id },
                         'STRHCYSHFXGJCVHXXFGhsdfyhfcvhdfxcgf15242414hfcwgd',
-                        { expiresIn: '24h' }
+                        { expiresIn: 86400 }
                     )
                 });
             }
         })
-        .catch(error => res.status(500).json({ error }));
+        .catch(error => res.status(501).json({ error }));
     })
     .catch(error => res.status(500).json({ error }));
 };
