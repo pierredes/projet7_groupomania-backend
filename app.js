@@ -1,6 +1,10 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
+const utilisateur = require('./modele/user');
+const post = require('./modele/post');
+const commentaire = require('./modele/commentaire');
+
 const app = express();
 
 app.use((req, res, next) => {
@@ -21,6 +25,14 @@ app.use('/api/authentification', authentificationRoute);
 app.use('/api/user', userRoute);
 app.use('/api/post', postRoute);
 app.use('/api/commentaire', commentaireRoute);
+
+// relation entre les tables
+utilisateur.hasMany(post);
+post.hasMany(commentaire);
+post.belongsTo(utilisateur, {foreignKey: {name: 'user_id', allowNull: false}});
+commentaire.belongsTo(utilisateur, {foreignKey: 'user_id'});
+commentaire.belongsTo(post, {foreignKey: 'post_id'});
+
 
 
 module.exports = app;
