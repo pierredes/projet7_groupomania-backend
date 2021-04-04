@@ -30,8 +30,8 @@ app.use('/api/commentaire', commentaireRoute);
 utilisateur.hasMany(post);
 post.hasMany(commentaire);
 post.belongsTo(utilisateur, {foreignKey: {name: 'user_id', allowNull: false}});
-commentaire.belongsTo(utilisateur, {foreignKey: 'user_id'});
-commentaire.belongsTo(post, {foreignKey: 'post_id'});
+commentaire.belongsTo(utilisateur,  {foreignKey: {name: 'user_id', allowNull: false}});
+commentaire.belongsTo(post,  {foreignKey: {name: 'post_id', allowNull: false}});
 
 
 
