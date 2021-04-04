@@ -7,10 +7,11 @@ const utilisateur = sequelize.define('utilisateur', {
     nom: {type: Sequelize.STRING(255), allowNull: false},
     prenom: {type: Sequelize.STRING(255), allowNull: false},
     poste: {type: Sequelize.STRING(255), allowNull: false},
+    admin: {type: Sequelize.BOOLEAN, allowNull: false},
     email: {type: Sequelize.STRING(255), allowNull: false, unique: true},
     motdepasse: {type: Sequelize.STRING(255), allowNull: false},
 });
 
-// sequelize.sync({ force: true });
+sequelize.sync();
 
 module.exports = utilisateur;
