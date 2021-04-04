@@ -9,6 +9,6 @@ const post = sequelize.define('post', {
     contenu: {type: Sequelize.TEXT, allowNull: false},
 });
 
-sequelize.sync({ force: true });
+sequelize.sync();
 
 module.exports = post;
