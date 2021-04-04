@@ -7,6 +7,6 @@ const commentaire = sequelize.define('commentaire', {
     contenu: {type: Sequelize.TEXT, allowNull: false},
 });
 
-sequelize.sync({ force: true });
+sequelize.sync();
 
 module.exports = commentaire;
