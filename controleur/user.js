@@ -1,4 +1,6 @@
-const utilisateur = require('../modele/user')
+const utilisateur = require('../modele/user');
+const post = require('../modele/post');
+const commentaire = require('../modele/commentaire');
 
 exports.modifierCompte = (req, res, next) => {
     utilisateur.findOne({ where: {id: req.params.id} })
@@ -15,13 +17,19 @@ exports.modifierCompte = (req, res, next) => {
 exports.supprimerCompte = (req, res, next) => {
     utilisateur.findOne({ where: {id: req.params.id} })
     .then(() => {
-        utilisateur.destroy({ where: {id: req.params.id} })
+        commentaire.destroy({ where: {user_id: req.params.id} })
         .then(() => {
-            res.status(201).json({ message: 'utilisateur supprimé' })
+            post.destroy({ where: {user_id: req.params.id}})
+            .then(() => {
+                utilisateur.destroy({ where: {id: req.params.id} })
+            .then(() => {
+                res.status(201).json({ message: 'utilisateur supprimé' })
+            })
+            .catch(error => res.status(404).json({ message: 'error' }));
+            })
         })
-        .catch(error => res.status(404).json({ error }));
     })
-    .catch(error => res.status(404).json({ error }));
+    .catch(error => res.status(404).json({ message: 'error1' }));
 }
 
 exports.recupererUnUtilisateur = (req, res, next) => {
@@ -34,10 +42,6 @@ exports.recupererTousLesUtilisateurs = (req, res, next) => {
     utilisateur.findAll()
     .then(utilisateur => res.status(201).json({ utilisateur }))
     .catch(error => res.status(404).json({ error }));
-}
-
-exports.recupererTousLesUtilisateursEnLigne = (req, res, next) => {
-    res.status(201).json( {message: 'Recup de compte'} )
 }
 
 
