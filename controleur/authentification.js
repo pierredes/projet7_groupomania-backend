@@ -4,9 +4,11 @@ const jwt = require('jsonwebtoken');
 
 const utilisateur = require('../modele/user');
 
+require('dotenv').config();
+
 
 exports.creationCompte = (req, res, next) => {
-    var cipher = crypto.createCipher('aes256', 'cleCryptage');
+    var cipher = crypto.createCipher(process.env.algorithme, process.env.cle_cryptage);
     var crypted = cipher.update(req.body.email,'utf8','hex');
     crypted += cipher.final('hex');
     bcrypt.hash(req.body.password, 10)
@@ -15,17 +17,18 @@ exports.creationCompte = (req, res, next) => {
             nom: req.body.nom,
             prenom: req.body.prenom,
             poste: req.body.poste,
+            admin: req.body.admin,
             email: crypted,
             motdepasse: hash
         })    
         .then(() => res.status(201).json({ message : 'Félicitation vous êtes inscrit !' }))
-        .catch(error => res.status(400).json({ error }));
+        .catch(() => res.status(400).json({ message: 'L\'e-mail utilisé existe déjà '}));
     })
     .catch(error => res.status(500).json({ error }));
 }
 
 exports.authentification = (req, res, next) => {
-    var cipher = crypto.createCipher('aes256', 'cleCryptage');
+    var cipher = crypto.createCipher(process.env.algorithme, process.env.cle_cryptage);
     var crypted = cipher.update(req.body.email,'utf8','hex');
     crypted += cipher.final('hex');
     utilisateur.findOne({ where: {email: crypted} })
