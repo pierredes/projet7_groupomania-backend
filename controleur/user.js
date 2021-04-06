@@ -7,7 +7,7 @@ exports.modifierCompte = (req, res, next) => {
     .then(() => {
        utilisateur.update({ ...req.body })
        .then(user => {
-           res.status(201).json({ message: 'utilisateur modifié'})
+           res.status(201).json({ message: 'Utilisateur modifié'})
        })
        .catch(error => res.status(404).json({ error }));
     })
@@ -23,13 +23,13 @@ exports.supprimerCompte = (req, res, next) => {
             .then(() => {
                 utilisateur.destroy({ where: {id: req.params.id} })
             .then(() => {
-                res.status(201).json({ message: 'utilisateur supprimé' })
+                res.status(201).json({ message: 'Utilisateur supprimé' })
             })
-            .catch(error => res.status(404).json({ message: 'error' }));
+            .catch(error => res.status(404).json({ error }));
             })
         })
     })
-    .catch(error => res.status(404).json({ message: 'error1' }));
+    .catch(error => res.status(404).json({ error }));
 }
 
 exports.recupererUnUtilisateur = (req, res, next) => {

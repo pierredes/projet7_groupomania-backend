@@ -9,7 +9,7 @@ exports.creationPost = (req, res, next) => {
         contenu: req.body.contenu,
         user_id: req.body.user_id
     })
-    .then(() => res.status(201).json({ message: 'post créer' }))
+    .then(() => res.status(201).json({ message: 'post créé' }))
     .catch(erreur => res.status(400).json({ erreur }))
 }
 
@@ -30,7 +30,7 @@ exports.modificationPost = (req, res, next) => {
            })
            .catch(error => res.status(404).json({ message: 'blablabla' + error }));
         } else {
-            return res.status(400).json({ message: "vous n'êtes pas l'auteur de l'article donc vous ne pouvez pas le modifier"})
+            return res.status(400).json({ message: "Vous n'êtes pas l'auteur de l'article donc vous ne pouvez pas le modifier"})
         }
     })
     .catch(error => res.status(404).json({ error }));
@@ -49,7 +49,7 @@ exports.supressionPost = (req, res, next) => {
                 .catch(error => res.status(404).json({ error }));
             })
         } else {
-            return res.status(400).json({ message: "vous n'êtes pas l'auteur de l'article donc vous ne pouvez pas le supprimer"})
+            return res.status(400).json({ message: "Vous n'êtes pas l'auteur de l'article donc vous ne pouvez pas le supprimer"})
         }
     })
     .catch(error => res.status(404).json({ error }));

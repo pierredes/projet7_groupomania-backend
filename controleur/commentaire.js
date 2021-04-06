@@ -8,7 +8,7 @@ exports.creerComentaire = (req, res, next) => {
         user_id: req.body.user_id,
         post_id: req.body.post_id
     })
-    .then(() => res.status(201).json({ message: 'commentaire créer' }))
+    .then(() => res.status(201).json({ message: 'Commentaire créé' }))
     .catch(erreur => res.status(400).json({ erreur }))
 }
 
@@ -19,7 +19,7 @@ exports.modifierUnCommentaire = (req, res, next) => {
             contenu: req.body.contenu
         })
        .then(() => {
-           res.status(201).json({ message: 'commentaire modifié'})
+           res.status(201).json({ message: 'Commentaire modifié'})
        })
        .catch(error => res.status(404).json({ error }));
     })
@@ -32,7 +32,7 @@ exports.supprimerUnCommentaire = (req, res, next) => {
         if(req.body.admin == true) {
             commentaire.destroy({ where: {id: req.params.id} })
             .then(() => {
-                res.status(201).json({ message: 'commentaire supprimé' })
+                res.status(201).json({ message: 'Commentaire supprimé' })
             })
             .catch(error => res.status(404).json({ error }));
         } else {
