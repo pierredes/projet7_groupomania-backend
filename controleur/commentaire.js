@@ -50,7 +50,7 @@ exports.afficherUnCommentaire = (req, res, next) => {
 }
 
 exports.afficherTousLesCommentaire = (req, res, next) => {
-    commentaire.findAll()
+    commentaire.findAll({include: [{model: utilisateur}]})
     .then(commentaire => res.status(200).json({ commentaire }))
     .catch(error => res.status(404).json({ error }));
 }
