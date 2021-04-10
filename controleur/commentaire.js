@@ -1,11 +1,12 @@
 const commentaire = require('../modele/commentaire');
 const utilisateur = require('../modele/user');
-const post = require('../modele/post')
+const post = require('../modele/post');
+const jwt = require('jsonwebtoken');
 
 exports.creerComentaire = (req, res, next) => {
     commentaire.create({
         contenu: req.body.contenu,
-        user_id: req.body.user_id,
+        user_id: jwt.decode(req.headers.authorization).userId,
         post_id: req.body.post_id
     })
     .then(() => res.status(201).json({ message: 'Commentaire créé' }))
@@ -29,7 +30,7 @@ exports.modifierUnCommentaire = (req, res, next) => {
 exports.supprimerUnCommentaire = (req, res, next) => {
     commentaire.findOne({ where: {id: req.params.id} })
     .then(() => {
-        if(req.body.admin == true) {
+        if(jwt.decode(req.headers.authorization).isAdmin == true) {
             commentaire.destroy({ where: {id: req.params.id} })
             .then(() => {
                 res.status(201).json({ message: 'Commentaire supprimé' })

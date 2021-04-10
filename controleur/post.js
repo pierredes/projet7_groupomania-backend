@@ -1,13 +1,14 @@
 const commentaire = require('../modele/commentaire');
 const post = require('../modele/post');
 const utilisateur = require ('../modele/user');
+const jwt = require('jsonwebtoken');
 
 exports.creationPost = (req, res, next) => {
     post.create({
         titre: req.body.titre,
         sujet: req.body.sujet,
         contenu: req.body.contenu,
-        user_id: req.body.user_id
+        user_id: jwt.decode(req.headers.authorization).userId
     })
     .then(() => res.status(201).json({ message: 'post créé' }))
     .catch(erreur => res.status(400).json({ erreur }))
@@ -16,7 +17,7 @@ exports.creationPost = (req, res, next) => {
 exports.modificationPost = (req, res, next) => {
     post.findOne({ where: {id: req.params.id} })
     .then((post) => {
-        if(post.user_id == req.body.user_id) {
+        if(post.user_id == jwt.decode(req.headers.authorization).userId) {
             post.update({
                 titre: req.body.titre,
                 sujet: req.body.sujet,
@@ -39,7 +40,7 @@ exports.modificationPost = (req, res, next) => {
 exports.supressionPost = (req, res, next) => {
     post.findOne({ where: {id: req.params.id} })
     .then((post) => {
-        if(post.user_id == req.body.user_id || req.body.admin == true) {
+        if(post.user_id == jwt.decode(req.headers.authorization).userId || jwt.decode(req.headers.authorization).isAdmin == true) {
             commentaire.destroy({ where: {post_id: req.params.id}})
             .then(() => {
                 post.destroy({ where: {id: req.params.id} })

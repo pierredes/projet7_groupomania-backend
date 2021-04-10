@@ -1,6 +1,7 @@
 const utilisateur = require('../modele/user');
 const post = require('../modele/post');
 const commentaire = require('../modele/commentaire');
+const jwt = require('jsonwebtoken');
 
 exports.modifierCompte = (req, res, next) => {
     utilisateur.findOne({ where: {id: req.params.id} })
@@ -15,13 +16,13 @@ exports.modifierCompte = (req, res, next) => {
 }
 
 exports.supprimerCompte = (req, res, next) => {
-    utilisateur.findOne({ where: {id: req.params.id} })
+    utilisateur.findOne({ where: {id: jwt.decode(req.headers.authorization).userId} })
     .then(() => {
-        commentaire.destroy({ where: {user_id: req.params.id} })
+        commentaire.destroy({ where: {user_id: jwt.decode(req.headers.authorization).userId} })
         .then(() => {
-            post.destroy({ where: {user_id: req.params.id}})
+            post.destroy({ where: {user_id: jwt.decode(req.headers.authorization).userId}})
             .then(() => {
-                utilisateur.destroy({ where: {id: req.params.id} })
+                utilisateur.destroy({ where: {id: jwt.decode(req.headers.authorization).userId} })
             .then(() => {
                 res.status(201).json({ message: 'Utilisateur supprimé' })
             })

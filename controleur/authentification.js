@@ -45,9 +45,9 @@ exports.authentification = (req, res, next) => {
                 return res.status(200).json({
                     userid: user.id,
                     token: jwt.sign(
-                        { userId: user.id },
+                        { userId: user.id, isAdmin: user.admin },
                         'STRHCYSHFXGJCVHXXFGhsdfyhfcvhdfxcgf15242414hfcwgd',
-                        { expiresIn: 86400 }
+                        { expiresIn: "86400" }
                     )
                 });
             }
